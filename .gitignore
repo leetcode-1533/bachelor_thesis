@@ -92,3 +92,5 @@ sympy-plots-for-*.tex/
 .texpadtmp
 .DS_Store*
 *.un~
+
+*.pdf
