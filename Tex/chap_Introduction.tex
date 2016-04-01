@@ -1,6 +1,6 @@
 \chapter{Introduction}
 
-\section{Project Development Track}
+\section{Project Objective}
 The initial purpose of this project is to test the performance of difference \textit{Decomposition Algorithms} in terms of \textit{Facial Images}. PCA, NMF, ICA were implemented, and has successfully compressed facial images with around 10,000 pixels into vectors of length 30 to 100. Besides that, a simple face recognition system were built with SVM as the classifier and the overall accuracy for successfully recognition can be around 85\%. However, as the project expends, several drawbacks of those algorithms gradually revealed. 
 \begin{enumerate}
     \item PCA, NMF, ICA are all so called \textbf{global approaches}. While greatly compressed the data, those algorithms cannot preserve face crucial details. Therefore cannot be served as an accurate description of the face. And I felt hard to further increase the recognition accuracy when it comes to very similar people.
@@ -8,19 +8,31 @@ The initial purpose of this project is to test the performance of difference \te
 \end{enumerate}
 
 \textbf{Component-based approaches} were presented to conquer those problems. In comparison to global 
-approaches, it only concentrates on the areas of image with the maximum changes(or with maximum energy). And therefore can provide a more accurate description of people. SIFT were implemented, and the overall accuracy can be 99\% at its maximum. However, those algorithms are perfect as well, for the following reasons,
+approaches, it only concentrates on the areas of image with the largest changes(or with maximum energy). And can provide a more accurate description of people. SIFT were implemented, and the overall accuracy can be 99\% at its maximum. However, those algorithms are not perfect as well, for the following reasons,
+\todo{Cons: Component-based approaches}
 \begin{enumerate}
-    \item Component-based approaches cannot effectively compress the data. Taking SIFT as an example, it used 128 double number for a single descriptor and an facial image with around 10,000 pixels can have more than 30 descriptors, comprising of more than 3,000 double number.
+    \item Component-based approaches cannot effectively compress data. Taking SIFT as an example, it used 128 double numbers for a single descriptor and an facial image with around 10,000 pixels can have more than 30 descriptors, comprising of more than 3,000 double numbers. Not only so, larger size of vectors will also drastically increase the computation difficulties.
     \item Component-based approaches are irreversible. The general facial information were lost and the original image cannot be reconstructed.
 \end{enumerate}
 
-And this project emphasize on comparing the difference between those algorithms.  
- 
+As you will see, these doesn't exist an all-around algorithm. And this project emphasize on highlighting those differences from the perspective of global versus component-based approaches. And hopefully in the end can provide some insightful suggestions when it comes to real application.
+\todo{Background Research}
 
-\section{涉及内容}
-\subsection{人脸识别的三个过程}
-人脸识别作为一种从图像中获取有用信息的
-\section{背景调查}
-\subsection{通常测试领域}
+\section{Project Scope}
+A typical face recognition system usually consists of the following procedures:
+\begin{enumerate}
+	\item{Image Processing: } This stage treated the facial images as a normal image. And algorithms applied can be scale-transformation, anti-noising, anti-alignment, color transforation into grayscale etc.
+	\item{Face Detection: } Face usually is not the only object in the frame. And this stage try to identify the size and location of the face.
+	\item{Decomposition: } Face images usually are represented by a vector with more than 10,000 elements and usually it is not plausible to process it directly. This stage try to transform the representation of the image into other domains. And to make this representation more effective and meaningful.
+	\item{Classification: } After stage 3, a facial image has been successfully transformed into a much more representative format. And it becomes a typical machine learning problem. It is to predict the label(class, identity) of the vector with posterior information.
+\end{enumerate}
+And it is important to notice that there exist different types of face image related algorithms:
+\begin{enumerate}
+	\item{
+\end{enumerate}
 
-\section{本报告结构}
+\subsection{Face Recognition procedure}
+
+\section{Project Structure}
+
+\section{Potential Application}
