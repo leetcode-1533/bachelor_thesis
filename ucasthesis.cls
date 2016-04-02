@@ -86,7 +86,7 @@
 \raggedbottom
 %% specifies the amount of space between paragraphs.
 %% other reasonable specifications are \bigskipamount and \smallskipamount.
-\setlength{\parskip}{\medskipamount}
+\setlength{\parskip}{\smallskipamount}
 %% line spacing
 %\renewcommand{\baselinestretch}{1.3} % this is the default line space setting
 %% default pagestyle is page number at bottom without headers and footers
