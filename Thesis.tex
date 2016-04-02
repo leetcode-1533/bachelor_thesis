@@ -1,17 +1,3 @@
-%%%%% --------------------------------------------------------------------------------
-%%
-%%                               Document Template
-%%
-%%%%% --------------------------------------------------------------------------------
-%% Copyright (C) 2014-2018 Huangrui Mo <huangrui.mo@gmail.com> 
-%% This is free software: you can redistribute it and/or modify it
-%% under the terms of the GNU General Public License as published by
-%% the Free Software Foundation, either version 3 of the License, or
-%% (at your option) any later version.
-%%%%% --------------------------------------------------------------------------------
-%%
-%%%%*************************Document Class Declaration*******************************
-%%
 \documentclass{ucasthesis}% thesis template of the Uni of Chinese Academy of Sciences
 %% Multiple Options:
 %% [scheme = plain] % for thesis writing of international students
@@ -38,72 +24,29 @@
 %% [background] % enable page background, will auto enable color package
 %% [tikz] % enable tikz for complex diagrams, will auto enbale color package
 %% [table] % enable a table package for complex tables, current is ctable
-\usepackage{custom}% user defined commands
-%\usepackage{fullpage}
-\usepackage{epstopdf}
+\usepackage{custom}
+\usepackage{fullpage}
 
-%%%%% 
-%--------------------------------------------------------------------------------
-%%
-%%%%*********************************Content******************************************
-%%
 \begin{document}
-%%%%% --------------------------------------------------------------------------------
-%%
-%%%%*********************************Frontmatter**************************************
-%%
-%% Frontmatter of Title page, Table of contents, Preface chapter.
+
 \frontmatter
-%%
-%% >>> Frontpages
-%%
-\input{./Tex/Frontpages}
-%%
-%%% >>> List of Content
-%%
-\tableofcontents% contents catalog
-\listoftables% tables catalog
-\intotoc{表格列表}% add a corresponding item to the contents table and bookmark
-\listoffigures% figures catalog
-\intotoc{图形列表}% add a corresponding item to the contents table and bookmark
-%%
-%% >>> prematter
-%%
-\input{./Tex/Prematter}% list of symbols, preface of books
-%%
-%%%%% --------------------------------------------------------------------------------
-%%
-%%%%*********************************Mainmatter***************************************
-%%
-%% Main topics.
+
+%\input{./Tex/Frontpages} %title etc..
+\tableofcontents
+
 \mainmatter
-%%
-%%% >>> Main Contents
-%%
-\input{./Tex/Main_Content}%
-%%%%% --------------------------------------------------------------------------------
-%%
-%%%%*********************************Appendix*****************************************
-%%
-%% Some subordinate chapters.
-%\appendix
-%\input{./Tex/Appendix.tex}
-%\input{Tex/Appendix.tex}%
-%%%%% --------------------------------------------------------------------------------
-%%
-%%%%********************************Backmatter****************************************
-%%
-%% Matters of Bibliography, Glossary, Index.
+\input{./Tex/Main_Content}
+
+
+\appendix
+%\input{Tex/Prematter} % roman character...
+\input{Tex/Appendix}
+
 \backmatter
-%%
-%%% >>> Bibliography
-%%
-\bibliography{Biblio/Myrefs}%
-\intotoc{参考文献}% add a corresponding item to the contents table and bookmark
-%%
-%%% >>> Other contents
-%%
-\input{./Tex/Backmatter}
-%%
+
+\bibliography{Biblio/Myrefs}
+\intotoc{参考文献}
+
+%\input{./Tex/Backmatter} % credits..
 \end{document}
-%%%%% --------------------------------------------------------------------------------
+

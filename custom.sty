@@ -89,8 +89,11 @@ macros package]
 %% you want them to be printed with the same style of the rest of the text, you can use this:
 %\urlstyle{same}
 %%%%% --------------------------------------------------------------------------------
-\newcounter{todo}
-\newcommand\todo[1]{\refstepcounter{todo}\marginpar{\color{red}{#1}}\addcontentsline{tod}{subsection}{#1~\thetodo}}%
+\usepackage{todonotes}
+%\usepackage{fullpage}
+%\newcounter{todo}
+%%\newcommand\todo[1]{\refstepcounter{todo}\marginpar{\color{red}{#1}}\addcontentsline{tod}{subsection}{#1~\thetodo}}%
+
 \endinput
 %% End of custom.sty
 %%%%% --------------------------------------------------------------------------------
