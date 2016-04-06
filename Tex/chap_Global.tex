@@ -106,9 +106,9 @@ Weights = Inv(V) \cdot I
 \\
 在实践中由于第二类的维数过高,运算量太大,采用了第一类.\todo{ArchitectureII}
 \section{PCA}
-本章节的主要依据文献是\cite{turk1991eigenfaces}和\cite{turk1991face},从本章节开始,将依次简要介绍PCA, NMF, ICA的基本原理和计算方法.并在ORL数据库下给出其特征脸空间. \newline
+本章节的主要依据文献是\cite{turk1991eigenfaces, turk1991face},从本章节开始,将依次简要介绍PCA, NMF, ICA的基本原理和计算方法.并在ORL数据库下给出其特征脸空间. \newline
 
-根据\cite{de2010face}和\cite{smith2002tutorial},当PCA的运算数据中减去其平均值(又称为平均脸),PCA运算等价于KL运算.所以本文也是对KL运算的介绍.\newline
+根据\cite{de2010face, smith2002tutorial},当PCA的运算数据中减去其平均值(又称为平均脸),PCA运算等价于KL运算.所以本文也是对KL运算的介绍.\newline
 
 \subsection{PCA的思想}
 \begin{enumerate}
@@ -169,7 +169,7 @@ L是一个$M \times M$大小的矩阵.
 \section{NMF}
 
 \subsection{NMF的思想和计算方法}
-本章节的内容主要基于\cite{lee1999learning}和\cite{lee2001algorithms}.\newline
+本章节的内容主要基于\cite{lee1999learning, lee2001algorithms}.\newline
 
 NMF算法围绕着在保证分量非负性的同时达到$V=W \cdot H$的分解.
 	其中
@@ -195,11 +195,11 @@ NMF算法提出了保证W,H非负性的前提下的迭代公式,并证明了其�
 同时,需要注意的是
 \begin{itemize}
 	\item 上述的迭代公式并非全局最优解.对于$||V-W\cdot H||$这个优化函数,目前并没有可以同时优化W和H的方法.NMF方法采用的是迭代的方法,也就是,优化H时,以上一步的W为目前最佳W,优化W时,以上一步的H为目前最佳H.而其该局限性使得这种优化方法只能收敛到局部最小值,并且每次结果都和初始值有关.\cite{berry2007algorithms}.
-	\item 上述的迭代公式,惩罚函数只是NMF思想的一种实现方式.现实中还有其他的替代方法.在\cite{lee1999learning}和\cite{lee2001algorithms}就列写了另一个惩罚函数和对应的迭代公式,还有对应迭代公式收敛性的证明.其惩罚函数为$$\Sigma_{ij}A_{ij} log \frac{A_{ij}}{B_{ij}} - A_{ij} + B_{ij}$$
+	\item 上述的迭代公式,惩罚函数只是NMF思想的一种实现方式.现实中还有其他的替代方法.在\cite{lee1999learning, lee2001algorithms}就列写了另一个惩罚函数和对应的迭代公式,还有对应迭代公式收敛性的证明.其惩罚函数为$$\Sigma_{ij}A_{ij} log \frac{A_{ij}}{B_{ij}} - A_{ij} + B_{ij}$$
 \end{itemize}
 
 \subsection{NMF的终止条件}
-在\cite{lee1999learning}和\cite{lee2001algorithms}中,并没有对NMF算法的终止条件作出说明,而NMF算法的终止条件也有很多种不同的解释,由于实际计算中很难达到理想的$V=WH$的条件,因此需要在算法收敛速度较慢时提前终止算法.
+在\cite{lee1999learning, lee2001algorithms}中,并没有对NMF算法的终止条件作出说明,而NMF算法的终止条件也有很多种不同的解释,由于实际计算中很难达到理想的$V=WH$的条件,因此需要在算法收敛速度较慢时提前终止算法.
 \begin{itemize}
 	\item 在\cite{hoyer2004non}的算法中,其NMF算法是一个无限循环,而需要用户根据W和H的分解情况来自行中断程序.
 	\item 在\cite{brunet2004metagenes}中,其NMF算法根据分析结果是否不再变化达到稳定而中断程序.
@@ -346,6 +346,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 	\end{equation}
 	当仅仅使用一个函数G时,可进一步近似为
 	\begin{equation}
+	\label{ica_g}
 		J(y) \propto (E(G(y)) - E(G(v)))^2
 	\end{equation}
 	
@@ -362,7 +363,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 	其中的$a_1$是常数, $1 \leqslant a_1 \leqslant 2$.\newline
 
 
-	而\textit{FastICA}算法就是一种类似牛顿法的使用梯度下降法(Gradient Descent)方法来逼近J最大值的方法.\newline
+	而\textit{FastICA}算法就是一种类似牛顿法的使用梯度下降法(Gradient Descent)方法来逼近J最大值的方法. 
 	
 	\paragraph{InfoMax}
 	\textit{FastICA}从信息论的角度,来求得最大的\textit{Negentropy},而\textit{InfoMax}则从最小化\textit{Mutual information}的角度出发.
@@ -382,8 +383,14 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 	从\cite{draper2003recognizing}得到,其实,虽然\textit{FastICA}和\textit{InfoMax}形式不同,但是差别并不大.\cite{draper2003recognizing}还索引了之前的一些经验性的比较,发现结果并无太大差别.\newline
 	
 	本项目中,使用了\cite{fastica25}的\textit{FastICA}实现方法.	
+	\paragraph{ICA的缺点} 同时,这些引用文献也多提到了ICA的实际应用上的一些缺点,总结如下
+	\begin{itemize}
+		\item ICA计算的结果与原本信号源$s$的结果的顺序被不一致
+		\item ICA做了非高斯分布的假设.当高斯分布时,无法进行ICA运算
+		\item ICA计算出的分量是独立平行的,丢失了方差,无法看出权重
+	\end{itemize}
 
-\subsection{ICA在主要应用场所}
+\subsection{ICA的主要应用}
 需要指出的,人脸图像分解并非ICA的主要应用场所,ICA的应用最初产生于盲源分离(Blind Source Seperation, BSS), 下面将对ICA在盲源分离的应用做一些简要介绍,并给出ICA在人脸图像分解直觉上的动机.\newline
 
 经过上一章节的介绍,ICA可以在混合信号$x$中解混,分析出s,以下是ICA作用于一维的变量中的效果:
@@ -396,6 +403,8 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 0.67324&0.41986&0.07831\\\hline
 \end{tabular}
 \end{center}
+
+同时,\ref{ica_g}中的方程$G()$取形式$g(u)=tanh(a1*u)$,终止条件J的阈值取为默认值0.0001.
 
 \begin{center}
 \begin{minipage}[t]{\linewidth}
@@ -425,7 +434,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 \end{center}
 图片放置的顺序和\ref{fig:icadecom}一样,可见,ICA成功得从第二栏混合后的向量中分解出了第一栏的图片.\newline
 
-从此就引出了ICA作用于人脸图像的动机了,如果输入人脸图像是\ref{fig:icadecom2}的第二栏图像,我们也用相同的方法来分解,必然能得到一些分解的结果.当假定人脸图像是有若干独立的变量线性组合而成的,自然地,我们就得到了第三栏这些分量.而这些分量具有相互独立的性质,本项目以其作为投影的基底.
+从此就引出了ICA作用于人脸图像的动机了,如果输入人脸图像是\ref{fig:icadecom2}的第二栏图像,我们也用相同的方法来分解,必然能得到一些分解的结果.当假定人脸图像是有若干独立的变量线性组合而成的,自然地,我们就得到了第三栏这些分量.而这些分量具有相互独立的性质,本项目假定人脸图像就是由这些分量组合而来的,并以其作为投影的基底.
 
 
 \subsection{ICA的在ORL测试集的投影基底}
@@ -466,5 +475,30 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 		\item Gavor wavelet transforms
 		\item MMSD, SMSD
 	\end{itemize}
-\section{实验:数据的低维表示}
+
+\section{相关实验}
+\subsection{基底投影的区别}
+好的基底应该能区分出不同的人物.和本节的基底映射处理联系起来,就投影后的坐标来讲,也就是同一个人不同的照片应该是比较一致的,不同人不同的照片应该有比较大的区别.\newline
+
+以下本小节将ORL的400张照片分别投影到以120张照片为基底所解析出的64个基底,并且计算这400个坐标两两之间的距离.分别计算了欧式距离和余弦距离.
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\textwidth]{Img/PNI_dismat.pdf} \captionof{figure}{PCA, NMF, ICA 作为基底时样本投影坐标的区别}
+\label{fig:ica_base}
+}
+\end{minipage}
+\medskip
+\end{center}
+\todo{observation}
+\begin{itemize}
+	\item 可见,上述6幅图片的对角线均存在着颜色约为黑色(取值为0),大小约为$10 \times 10$的方阵,说明这些算法都有能力将不同人,同一个人的照片区别开来.但是,这些图也有一些瑕疵,如,有些类间的距离比较小,有些说明类内距离比较大.
+	\item 在两种比较尺度下,这三种算法的距离都有一定的区别
+\end{itemize}
+
+\subsection{运行时间的比较}
+\subsection{重建与恢复}
 
