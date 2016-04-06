@@ -1,6 +1,11 @@
 \chapter{基于局部的特征提取算法}
+在上一节的学习过程中,笔者渐渐感觉到计算算子对人脸识别,分类系统的影响非常大,毕竟,人脸图像被分解后,仅仅由一个很短的向量来表示,那该编码系统对样本的区分程度很大程度上就能决定后续分类系统的性能.因此,我渐渐发现了基于局部的特征提取算法,它们有些具有\textit{Content Awareness}的特性,对背景噪声有一定的区分能力,并且可以精细的比较样本的细节之处,因此可以达到精确的识别性能.本章节以SIFT算子为例做介绍.
 \section{SIFT}
 \subsection{SIFT的原理}
+SIFT算子的计算方法共分4步.
+
+\subsubsection{SIFT-PCA算法}
+由于SIFT运算结果过长,笔者实现了SIFT-PCA算子
+
 \subsection{SIFT的编码方法}
-\subsection{NBNN算法}
-\subsection{SIFT-PCA算法}
+由于SIFT算子是\textit{Content Aware}的,其特征提取的结果是由若干个提取位置上的描述子来描述的,因此,长度并不固定.这对后续的分类算法并不友好.因此,SIFT的结果大都被编码了,编码方法通常有以下的

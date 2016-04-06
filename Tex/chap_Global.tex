@@ -458,7 +458,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 
 \section{DCT}
-\subsection{DCT的原理}
+在之前的实践中,笔者发现实际上任何图片的较为短小的并且与图片有较大联系的相关向量都可以被当做特征向量.这里,本项目从频域的角度出发,提取了图片的频域基频特征.
 \section{更多的基底}
 除了这些方法,还有很多其他的方法.\cite{de2010face}列出了更为详尽的列表,限于项目时间的限制,并没有深入研究这些所有的算法,仅仅尽可能的通过\textit{SciKit}工具包来列出相同测试样本下的基底.
 	\begin{itemize}
@@ -478,6 +478,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 \section{相关实验}
 \subsection{基底投影的区别}
+\label{sec:pnibase}
 好的基底应该能区分出不同的人物.和本节的基底映射处理联系起来,就投影后的坐标来讲,也就是同一个人不同的照片应该是比较一致的,不同人不同的照片应该有比较大的区别.\newline
 
 以下本小节将ORL的400张照片分别投影到以120张照片为基底所解析出的64个基底,并且计算这400个坐标两两之间的距离.分别计算了欧式距离和余弦距离.
@@ -494,11 +495,78 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 \medskip
 \end{center}
 \todo{observation}
+\paragraph{结论}
 \begin{itemize}
 	\item 可见,上述6幅图片的对角线均存在着颜色约为黑色(取值为0),大小约为$10 \times 10$的方阵,说明这些算法都有能力将不同人,同一个人的照片区别开来.但是,这些图也有一些瑕疵,如,有些类间的距离比较小,有些说明类内距离比较大.
-	\item 在两种比较尺度下,这三种算法的距离都有一定的区别
+	\item 在两种比较尺度下,这三种算法的距离都有一定的区别,说明距离的度量和方法也有关系
 \end{itemize}
 
 \subsection{运行时间的比较}
+\label{sec:pni_cal_time}
+本章节分别创建[1, 11, 21, 31, 41, 51, 61, 71, 81, 91]维度的基底,并分别统计运算时间.
+\paragraph{基底创建时间}
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\textwidth]{Img/pni_baseconstr} \captionof{figure}{基底创建时间 \\其中ICA分别用了两种不同的配置}
+\label{fig:ica_base}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+\paragraph{基底投影时间}
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\textwidth]{Img/pni_baseproj} \captionof{figure}{基底投影时间}
+\label{fig:ica_base}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+\paragraph{结论}
+\begin{enumerate}
+	\item PCA速度最快,并且优势明显,且对基底的数目不敏感。
+	\item NMF, ICA运行速度比较慢,随着基底的增加运算量增大
+	\item NMF, ICA迭代运算对初值敏感的特点,运行速度呈现波动
+	\item 实际操作中,发现ICA的参数\ref{ica_g}对运行有较大影响
+		$g(u)=tanh(a1*u)$时较慢,并且随样本数上升而增加计算量,$g(u) = u^3$时相比快很多,并且样本数的增加不敏感
+	\item 与创建基底时间相比,投影时间小很多,所以可以离线计算基底,在线投影
+	\item 同时,由于伪逆\textit{pinv()}的涉及,NMF,ICA运行需要时间,PCA求逆基本不需要时间
+\end{enumerate}
+
+
+
 \subsection{重建与恢复}
+\label{sec:pni_recon}
+本小节是对PCA, NMF, ICA的恢复情况的比较.其过程是这样的,在\ref{sec:pni_cal_time}的基础上,分别选取4个样本来投影,并计算PSNR和MSE. 
+
+\begin{enumerate}
+	\item 第一张样本是ORL数据库中已有的一张图片,该图片参与了基底运算
+	\item 第二张样本是ORL数据库中已有的一张图片,该图片没有参与基底运算
+	\item 第三张样本是一张普通的人脸图片(来自LFW数据库)
+	\item 第四张样本是一个非人脸图片
+\end{enumerate}
+
+MSE的公式为\begin{equation}
+		MSE = \Sigma_{i=1}^m\Sigma_{j=1}^n(Y(i,j) - X(i,j))^2	\end{equation}
+	
+		PSNR的公式为
+\begin{equation}
+	PSNR = 10 log \frac{mn^2}{MSE}
+\end{equation}
+其中:
+\begin{enumerate}
+	\item m,n 是图片的尺寸
+	\item X,Y 分别是恢复及重建的图片
+\end{enumerate}
+
+\subsection{\ref{sec:pni_recon}的应用}
+实际上\ref{sec:pni_recon}中MSE的区别是可以被加以利用来识别场景的.以下是对应的ROC曲线的绘制:
 
