@@ -6,6 +6,7 @@ PCA\cite{turk1991face}是近代人脸识别中较早的方法.在文献中,作�
 这些基于统计的方法都有着不同的出发点,但在实现上都是比较相似的.他们从不同的角度来尝试从人脸数据库中分解出更有代表性的分量,并把那些分量作为特征空间的基底.当处理新入样本时,新的样本和创建的特征空间基底作投影操作,得到的样本坐标就是该样本在空间的表示.以下是本文中所尝试的方法及其主要思想:
 \begin{center}
   \footnotesize
+        \captionof{table}{本文中所尝试的降维方法及其主要思想}
   \begin{tabular}{l|c}
   \hline 
     方法 & 主要思想 \\ \hline
@@ -14,7 +15,6 @@ PCA\cite{turk1991face}是近代人脸识别中较早的方法.在文献中,作�
     ICA & 在假设样本独立统计(I.I.D)及非高斯分布的情况下,来近似估计各个独立分量成分\\
     \hline
   \end{tabular}
-      \captionof{table}{本文中所尝试的降维方法及其主要思想}
 \end{center}
 \subsection{人脸分解的例子}
 下面以PCA为例,来表示一个具体的基于全局的人脸特征提取算法的工作流程.
@@ -222,50 +222,38 @@ NMF算法提出了保证W,H非负性的前提下的迭代公式,并证明了其�
 
 \begin{multicols}{4}
 \begin{verbatim}
-10	0	492
-	20	0	626
-	30	0	484
-	40	0	440
-	50	0	252
-	60	0	152
-	70	0	66
-	80	0	40
-	90	0	36
-	100	0	28
+	10	0	378
+	20	0	506
+	30	0	352
+	40	0	344
+	50	0	186
+	60	0	196
+	70	0	62
+	80	0	86
+	90	0	44
+	100	0	34
 	110	0	26
-	120	0	26
-	130	0	22
-	140	0	22
-	150	0	18
-	160	0	28
-	170	0	20
-	180	0	16
-	190	1	0
+	120	0	30
+	130	0	30
+	140	0	32
+	150	1	10
+	160	0	24
+	170	0	18
+	180	0	28
+	190	1	6
 	200	2	10
-	210	3	4
-	220	0	18
-	230	1	4
-	240	2	10
-	250	3	14
-	260	4	14
-	270	5	6
-	280	0	28
-	290	0	20
-	300	1	10
-	310	0	22
-	320	1	0
-	330	2	0
-	340	3	2
-	350	4	0
-	360	5	6
-	370	0	18
-	380	0	26
-	390	1	0
-	400	2	6
-	410	3	0
-	420	4	0
-	430	5	0
-	440	6	14
+	210	0	40
+	220	1	0
+	230	2	2
+	240	3	12
+	250	4	12
+	260	0	24
+	270	1	8
+	280	2	14
+	290	3	4
+	300	4	0
+	310	5	4
+	320	6	0
 	\end{verbatim}
 \end{multicols}
 以下是对应的迭代过程中惩罚函数\ref{nmf_cost}下降曲线的绘制,所计算的输入量是120个,需要求得64个特征向量
@@ -274,7 +262,7 @@ NMF算法提出了保证W,H非负性的前提下的迭代公式,并证明了其�
 %\label{fig:main}
 \center
 {
-\includegraphics[width=\textwidth]{Img/nmf_costfuntion.pdf} \captionof{figure}{NMF的惩罚函数下降曲线 \\ x坐标:迭代次数, y坐标 惩罚函数\ref{nmf_cost}}
+\includegraphics[width=\textwidth]{Img/nmf_cost.pdf} \captionof{figure}{NMF的惩罚函数下降曲线 \\ x坐标:迭代次数, y坐标 惩罚函数\ref{nmf_cost}}
 }
 \end{minipage}
 \medskip
@@ -483,17 +471,75 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 以下本小节将ORL的400张照片分别投影到以120张照片为基底所解析出的64个基底,并且计算这400个坐标两两之间的距离.分别计算了欧式距离和余弦距离.
 
+
 \begin{center}
 \begin{minipage}[t]{\linewidth}
 %\label{fig:main}
 \center
 {
-\includegraphics[width=\textwidth]{Img/PNI_dismat.pdf} \captionof{figure}{PCA, NMF, ICA 作为基底时样本投影坐标的区别}
-\label{fig:ica_base}
+\includegraphics[width=\MyFactor\textwidth]{Img/pcaeu} \captionof{figure}{PCA Euclidean Distance}
 }
 \end{minipage}
 \medskip
 \end{center}
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\MyFactor\textwidth]{Img/nmfeu} \captionof{figure}{NMF Euclidean Distance}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\MyFactor\textwidth]{Img/icaeu} \captionof{figure}{ICA Euclidean Distance}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\MyFactor\textwidth]{Img/pcacos} \captionof{figure}{PCA Cosine Distance}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\MyFactor\textwidth]{Img/nmfcos} \captionof{figure}{NMF Cosine Distance}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\MyFactor\textwidth]{Img/icacos} \captionof{figure}{ICA Cosine Distance}
+}
+\end{minipage}
+\medskip
+\end{center}
+
+
 \todo{observation}
 \paragraph{结论}
 \begin{itemize}
@@ -566,7 +612,60 @@ MSE的公式为\begin{equation}
 	\item m,n 是图片的尺寸
 	\item X,Y 分别是恢复及重建的图片
 \end{enumerate}
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+%\label{fig:main}
+\center
+{
+\includegraphics[width=\textwidth]{Img/pni_reconstr.png} \captionof{figure}{测试图像的投影\\横轴:左4:PCA, 中4: NMF, 右4: ICA, 纵轴: 维度依次增加}
+\label{fig:ica_base}
+}
+\end{minipage}
+\medskip
+\end{center}
 
 \subsection{\ref{sec:pni_recon}的应用}
 实际上\ref{sec:pni_recon}中MSE的区别是可以被加以利用来识别场景的.以下是对应的ROC曲线的绘制:
 
+\subsection{结合SVM的分类实验}
+当全局特征提取后,自然地,对这些样本本项目尝试了使用SVM的分类识别的测试.其实验过程:
+	\begin{itemize}
+		\item 使用k-fold Cross Validation的方法,K取值为3
+		\item 改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
+		\item 每个学习样本又同时对应了不同的基底长度
+		\item 将学习,测试样本予以投影,并取得对应权值
+		\item 具体测试是指对ORL数据库40个人,通过学习样本的标签来推测测试样本的标签
+	\end{itemize}
+	经过上述的测试过程后,以下是实验的结果,其中,识别率由z轴表示,从$5-100$变化的轴表示了基底的数量.从$1-9$变化的轴表示了学习的样本比例.
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\MyFactor\textwidth]{Img/svm_pca} \captionof{figure}{PCA结合SVM的分类实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\MyFactor\textwidth]{Img/svm_nmf} \captionof{figure}{NMF结合SVM的分类实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\MyFactor\textwidth]{Img/svm_ica} \captionof{figure}{ICA结合SVM的分类实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
