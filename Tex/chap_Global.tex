@@ -599,7 +599,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 	\item 第三张样本是一张普通的人脸图片(来自LFW数据库)
 	\item 第四张样本是一个非人脸图片
 \end{enumerate}
-
+\todo{MSE}
 MSE的公式为\begin{equation}
 		MSE = \Sigma_{i=1}^m\Sigma_{j=1}^n(Y(i,j) - X(i,j))^2	\end{equation}
 	
@@ -628,44 +628,120 @@ MSE的公式为\begin{equation}
 实际上\ref{sec:pni_recon}中MSE的区别是可以被加以利用来识别场景的.以下是对应的ROC曲线的绘制:
 
 \subsection{结合SVM的分类实验}
-当全局特征提取后,自然地,对这些样本本项目尝试了使用SVM的分类识别的测试.其实验过程:
-	\begin{itemize}
-		\item 使用k-fold Cross Validation的方法,K取值为3
+\paragraph{识别结果} 当全局特征提取后,自然地,对这些样本本项目尝试了使用SVM的分类识别的测试.其实验过程:
+	\begin{enumerate}
+		\item 使用k-fold Cross Validation的方法,K取值为1
 		\item 改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
 		\item 每个学习样本又同时对应了不同的基底长度
 		\item 将学习,测试样本予以投影,并取得对应权值
 		\item 具体测试是指对ORL数据库40个人,通过学习样本的标签来推测测试样本的标签
+	\end{enumerate}
+	经过上述的测试过程后,以下是实验的结果,其中
+	\begin{enumerate}
+		\item 识别率由z轴表示
+		\item 从$5-100$变化的轴表示了基底的数量
+		\item 从$1-9$变化的轴表示了学习的样本比例,以10\%为单位
+	\end{enumerate}
+	
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_pni} \captionof{figure}{PCA, NMF, ICA结合SVM的分类实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+	
+	下图将三张图片画到了一起,	
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_pcanmfica} 
+	
+	\captionof{figure}{SVM结合PCA,NMF,ICA识别实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+	发现三种基底结合相同的SVM的识别率发生了有了一些交叉.其中ICA的表现比较差,NMF在大部分区域表现比较好,而PCA在较短的向量部分表现比较好.
+	
+	\paragraph{对识别结果的过滤} 同时,还对以上的识别结果进行了过滤,来更清楚的表示识别率和样本数,基底数的关系
+	
+		\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_pcafilter} 
+		\captionsetup{justification=centering}\captionof{figure}{SVM结合PCA不同识别率\\绿色:学习样本过少,红色:维数过低,蓝色:维数过高}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+	
+	得到的结论是
+	\begin{itemize}
+	\item 特征向量越多，在充分学习的情况下，其表现会越好，但这种优势并不明显，通常，特征向量$15-30$长度就足够满足需求了。
+	\item 更多的特征向量会要求更多的学习样本，当映射使用了很多特征向量时，会增加对样本的需求，并降低其最终的识别率。
+	\end{itemize}	
+	
+	\paragraph{在其他的空间上实现识别} 以上NMF, ICA的识别率不如PCA的好,这也许是空间的分布的缘故.于是,我想到了使用DCT等算法对空间进行转化,并在频率空间上进行识别.(由于NMF是非负分解,而DCT转化后的空间像素值可以为负,所以没有在NMF空间上使用DCT方法) \newline
+	
+	以下是普通ORL样本和DCT滤波后的ORL样本:
+	
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_pca_dct} \captionof{figure}{PCA, DCT-PCA结合SVM实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+	PCA与DCT-PCA完全重合,说明DCT处理后对其性能没有提升.
+	
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_ica_dct} \captionof{figure}{ICA, DCT-ICA结合SVM实验}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+	DCT处理后,显著提升了ICA的性能,使得ICA在特征向量较短的情况下能取得更加好的成功识别率.
+	
+	发现,
+	\begin{itemize}
+		\item 确实可以提高ICA的识别率.所以处理的空间对样本来说也比较重要.
+		\item 识别到一定成功率后,基于全局的方法出现了瓶颈.参考下面列出的易于出错的样本,发现这主要由于有些样本比较相似导致的
 	\end{itemize}
-	经过上述的测试过程后,以下是实验的结果,其中,识别率由z轴表示,从$5-100$变化的轴表示了基底的数量.从$1-9$变化的轴表示了学习的样本比例.
+	\paragraph{识别错例}
+	以下错例取自学习样本为90\%的NMF结合PCA的运行程序,共测试了40次,识别率为85\%,下面是对运行结果中出错的6个例子的分析:
 	\begin{center}
 	\begin{minipage}[t]{\linewidth}
 	%\label{fig:main}
 	\center
 	{
-	\includegraphics[width=\MyFactor\textwidth]{Img/svm_pca} \captionof{figure}{PCA结合SVM的分类实验}
+	\includegraphics[width=\textwidth]{Img/svm_wrong} \captionof{figure}{上:输入的样本,下:预测的样本}
 	}
 	\end{minipage}
 	\medskip
 	\end{center}
+	以下是对应出错的例子的标签:
+	\begin{center}
+	\captionof{table}{SVM出错的例子的标签}\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+原本标签&16&3&14&15&35&1\\\hline
+误测标签&22&25&28&21&25&24\\\hline
+\end{tabular}
+\end{center}
 
-	\begin{center}
-	\begin{minipage}[t]{\linewidth}
-	%\label{fig:main}
-	\center
-	{
-	\includegraphics[width=\MyFactor\textwidth]{Img/svm_nmf} \captionof{figure}{NMF结合SVM的分类实验}
-	}
-	\end{minipage}
-	\medskip
-	\end{center}
-
-	\begin{center}
-	\begin{minipage}[t]{\linewidth}
-	%\label{fig:main}
-	\center
-	{
-	\includegraphics[width=\MyFactor\textwidth]{Img/svm_ica} \captionof{figure}{ICA结合SVM的分类实验}
-	}
-	\end{minipage}
-	\medskip
-	\end{center}
+	
+	从上面的示意图中可以看到,有些样本是比较相似的,而由于基于全局的特征提取方法无法做到精细的比较,所以出错了.如,倒数第一,二,三个样本人脸的角度就和预测的人脸角度比较一样.再如,第三个人脸的胡子的特征就和预测的人脸比较一样.
+	
