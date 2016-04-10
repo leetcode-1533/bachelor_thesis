@@ -384,7 +384,9 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 经过上一章节的介绍,ICA可以在混合信号$x$中解混,分析出s,以下是ICA作用于一维的变量中的效果:
 	\paragraph{ICA作用于一维的变量}	
 	以下是ICA用于解混3个信号的示意,第一栏是原始信号,第二栏是混合后的信号,第三栏是解混后的信号,混合信号的A是
-	\begin{center}\begin{tabular}{|l|l|l|}
+	\begin{center}
+	\captionof{table}{随机混合矩阵A}
+	\begin{tabular}{|l|l|l|}
 \hline
 0.037195&0.58635&0.80667\\\hline
 0.55504&0.17859&0.091525\\\hline
@@ -591,38 +593,67 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 \subsection{重建与恢复}
 \label{sec:pni_recon}
-本小节是对PCA, NMF, ICA的恢复情况的比较.其过程是这样的,在\ref{sec:pni_cal_time}的基础上,分别选取4个样本来投影,并计算PSNR和MSE. 
+本小节是对PCA, NMF, ICA的恢复情况的比较.其过程是这样的,在\ref{sec:pni_cal_time}的基础上,分别选取5个样本来投影,并计算PSNR和MSE. 
 
 \begin{enumerate}
 	\item 第一张样本是ORL数据库中已有的一张图片,该图片参与了基底运算
 	\item 第二张样本是ORL数据库中已有的一张图片,该图片没有参与基底运算
-	\item 第三张样本是一张普通的人脸图片(来自LFW数据库)
-	\item 第四张样本是一个非人脸图片
+	\item 第三张样本是一张普通的人脸图片
+	\item 第四张是上一张图片去除背景的部分(使用了\textit{Viola-Jones algorithm}来识别人脸)
+	\item 第五张样本是一个非人脸图片
 \end{enumerate}
-\todo{MSE}
+
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/pni_recon} \captionof{figure}{重构输入样本示意}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+	\paragraph{重建结果}
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+\center
+{
+\includegraphics[width=\textwidth]{Img/pni_recon_re} \captionof{figure}{测试图像的投影\\横轴:左5:PCA, 中5: NMF, 右5: ICA, 纵轴: 维度依次增加}
+	\label{fig:pni_recon_re}
+}
+\end{minipage}
+\medskip
+\end{center}
+\paragraph{MSE}
 MSE的公式为\begin{equation}
 		MSE = \Sigma_{i=1}^m\Sigma_{j=1}^n(Y(i,j) - X(i,j))^2	\end{equation}
 	
-		PSNR的公式为
-\begin{equation}
-	PSNR = 10 log \frac{mn^2}{MSE}
-\end{equation}
-其中:
-\begin{enumerate}
+	\begin{enumerate}
 	\item m,n 是图片的尺寸
 	\item X,Y 分别是恢复及重建的图片
 \end{enumerate}
+
 \begin{center}
 \begin{minipage}[t]{\linewidth}
-%\label{fig:main}
 \center
 {
-\includegraphics[width=\textwidth]{Img/pni_reconstr.png} \captionof{figure}{测试图像的投影\\横轴:左4:PCA, 中4: NMF, 右4: ICA, 纵轴: 维度依次增加}
+		\captionsetup{justification=centering}
+\includegraphics[width=\textwidth]{Img/pni_rec_mse} \captionof{figure}{与\ref{fig:pni_recon_re}对应的MSE \\横轴:左5:PCA, 中5: NMF, 右5: ICA, 纵轴: 维度依次增加}
 \label{fig:ica_base}
 }
 \end{minipage}
 \medskip
 \end{center}
+
+\paragraph{结论}
+\begin{enumerate}
+	\item 维数越高恢复结果越好
+	\item 基于特征提取的人脸恢复图像恢复结果只能是和基底相关的图像.测试5的棋盘和恢复结果差别就比较大
+	\item 对于参加特征提取的图像,恢复效果比较好,但对于大部分样本恢复效果并不好
+	\item 维度的增加只意味着细节的增加,如PCA在30维的结果和100维的结果就已经很相近了
+	\item 就恢复效果来说,PCA应该最适合开发,PCA不仅可以有\textit{eigenvalues}给出一个恢复效果的估计,同时计算也比较快,恢复效果也不差.
+	\item 这种压缩方法其实并不合适,更好的方法应该是采用分块的方式,由于压缩比率过大,才使得恢复效果这么差的
+\end{enumerate}
 
 \subsection{\ref{sec:pni_recon}的应用}
 实际上\ref{sec:pni_recon}中MSE的区别是可以被加以利用来识别场景的.以下是对应的ROC曲线的绘制:
@@ -636,6 +667,7 @@ MSE的公式为\begin{equation}
 		\item 将学习,测试样本予以投影,并取得对应权值
 		\item 具体测试是指对ORL数据库40个人,通过学习样本的标签来推测测试样本的标签
 	\end{enumerate}
+	SVM使用径向基作为核函数,维度为3,惩罚函数参数为0.5,容错值为0.001.\newline
 	经过上述的测试过程后,以下是实验的结果,其中
 	\begin{enumerate}
 		\item 识别率由z轴表示
@@ -697,6 +729,18 @@ MSE的公式为\begin{equation}
 	%\label{fig:main}
 	\center
 	{
+	\includegraphics[width=\textwidth]{Img/dct_demo} \captionof{figure}{DCT演示(仅前20个人的数据)}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+	以下是数据改换成DCT数据后的PCA降维后结合SVM分类的结果.
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
 	\includegraphics[width=\textwidth]{Img/svm_pca_dct} \captionof{figure}{PCA, DCT-PCA结合SVM实验}
 	}
 	\end{minipage}
@@ -744,4 +788,29 @@ MSE的公式为\begin{equation}
 
 	
 	从上面的示意图中可以看到,有些样本是比较相似的,而由于基于全局的特征提取方法无法做到精细的比较,所以出错了.如,倒数第一,二,三个样本人脸的角度就和预测的人脸角度比较一样.再如,第三个人脸的胡子的特征就和预测的人脸比较一样.
+	
+\paragraph{Confusion Matrix}
+
+Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果,采用了5-fold Validation.综合成功率94\%.
+
+	\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	%\label{fig:main}
+	\center
+	{
+	\includegraphics[width=\textwidth]{Img/svm_confuse} \captionof{figure}{Confusion Matrix}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+
+\section{更多的分类机}
+
+上一节详细使用了SVM作为分类机,本届将遍历分类算法,来综合测试.具体过程如下:
+	\begin{enumerate}
+		\item PCA, NMF, ICA以及在DCT空间的PCA, ICA均从ORL数据库40人的前3张图片计算出该组数据库的长度为64位的基底.
+		\item ORL数据库参加基底运算的3张图片和没有参加的7张图片全部被上一步的运算投影到长度为64的坐标
+		\item 结合原有的标签,采用\textit{4-folds cross-validation}的方法,进行分类测试,并记录准确率
+	\end{enumerate}
+
 	
