@@ -839,38 +839,38 @@ Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果
 上一节详细使用了SVM作为分类机,本节将遍历分类算法,来综合测试.具体过程如下:
 	\begin{enumerate}
 		\item PCA, NMF, ICA均从ORL数据库40人的前3张图片计算出该组数据库的长度为64位的基底.
-		\item ORL数据库参加基底运算的3张图片和没有参加的7张图片全部被上一步的运算投影到长度为64的坐标
+		\item ORL数据库每个样本参加基底运算的3张图片和没有参加的7张图片全部被上一步的运算投影成为长度为64的坐标
 		\item 结合原有的标签,采用\textit{3-folds Cross-Validation}的方法,进行分类测试,并记录准确率
 	\end{enumerate}
 	测试结果:
 
 \begin{center}
-\captionof{table}{PCA,NMF,ICA结合不同分类机的分类效果}
-\begin{tabular}{|l|l|l|l|l|}
+\captionof{table}{PCA,NMF,ICA, DCT PCA, DCT ICA结合不同分类机的分类效果}
+\begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-&Method&PCA&NMF&ICA\\\hline
-1&Complex Tree &56.2&52.5&52.2\\\hline
-2&Medium Tree & 34.2&32&28\\\hline
-3&Simple Tree & 9.8&9.2&9.5\\\hline
-4&Linear Discriminant & 92.8&93.8&92.2\\\hline
-5&Quadratic Discriminant & 88&88&92\\\hline
-6&Linear SVM& 89.5&89.2&93.2\\\hline
-7&Quadratic SVM&91.8&91.8&94.8\\\hline
-8&Cubic SVM& 91.5&91.2&94.2\\\hline
-9&Fine Gaussian SVM&12.5&10&24.5\\\hline
-10&Medium Gaussian SVM&85.2&86.8&94.2\\\hline
-11&Coarse Gaussian SVM&51.7&56&87\\\hline
-12&Fine KNN&91.8&92.5&94.2\\\hline
-13&Medium KNN&70.2&78.5&82.5\\\hline
-14&Coarse KNN&32.2&29.2&37.8\\\hline
-15&Cosine KNN&81.2&81.5&81.5\\\hline
-16&Cubic KNN&68.8&79.2&82\\\hline
-17&Weighted KNN&86.2&89&91.2\\\hline
-18&Roosted Trees&69.5&64&68.8\\\hline
-19&Bagged Trees&86.5&86.5&91.2\\\hline
-20&Subspace Discriminant&\textbf{Best:96}&\textbf{Best:96.8}&\textbf{Best:95.8}\\\hline
-21&Subspace KNN&94.5&94.2&94.8\\\hline
-22&RUSBoosted Trees&66.5&52.5&24.8\\\hline
+&Method&PCA&NMF&ICA& DCT PCA & DCT ICA\\\hline
+1&Complex Tree &56.2&52.5&52.2&57.5&63.5\\\hline
+2&Medium Tree & 34.2&32&28&32.2&35.5\\\hline
+3&Simple Tree & 9.8&9.2&9.5&8.8&10\\\hline
+4&Linear Discriminant & 92.8&93.8&92.2&94&93.5\\\hline
+5&Quadratic Discriminant & 88&88&92&87.5&89.2\\\hline
+6&Linear SVM& 89.5&89.2&93.2&89.5&89.5\\\hline
+7&Quadratic SVM&91.8&91.8&94.8&90.5&89.5\\\hline
+8&Cubic SVM& 91.5&91.2&94.2&89&89.5\\\hline
+9&Fine Gaussian SVM&12.5&10&24.5&12.2&11.8\\\hline
+10&Medium Gaussian SVM&85.2&86.8&94.2&85.8&88.8\\\hline
+11&Coarse Gaussian SVM&51.7&56&87&54.2&52.5\\\hline
+12&Fine KNN&91.8&92.5&94.2&90.2&90.5\\\hline
+13&Medium KNN&70.2&78.5&82.5&72.5&73\\\hline
+14&Coarse KNN&32.2&29.2&37.8&27.3&28.5\\\hline
+15&Cosine KNN&81.2&81.5&81.5&79.5&74\\\hline
+16&Cubic KNN&68.8&79.2&82&73.5&70.8\\\hline
+17&Weighted KNN&86.2&89&91.2&86.5&88\\\hline
+18&Roosted Trees&69.5&64&68.8&69.8&77.2\\\hline
+19&Bagged Trees&86.5&86.5&91.2&86&91.5\\\hline
+20&Subspace Discriminant&\textbf{Best:96}&\textbf{Best:96.8}&\textbf{Best:95.8}&\textbf{Best:96}&95.8\\\hline
+21&Subspace KNN&94.5&94.2&94.8&94.5&\textbf{Best:96.2}\\\hline
+22&RUSBoosted Trees&66.5&52.5&24.8&62&69.2\\\hline
 \end{tabular}
 \end{center}
 
@@ -879,7 +879,7 @@ Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果
 	\center
 	{
 	\includegraphics[width=\textwidth]{Img/pni_res} \captionof{figure}{PCA,NMF,ICA结合不同分类机的分类效果}
-	}t
+	}
 	\end{minipage}
 	\medskip
 	\end{center}
