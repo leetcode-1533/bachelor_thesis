@@ -35,7 +35,7 @@ PCA\cite{turk1991face}是近代人脸识别中较早的方法.在文献中,作�
 
 其中,PCA的计算在给出特征向量的同时,还会给出代表特征向量权重的特征值,上述6个特征值在400个特征向量空间中占据了51.4\%的权重.权重分布如下图:
 
-\begin{figure}[!htbp]\centering \includegraphics[width=\textwidth]{Img/pca_eivalue.pdf} 
+\begin{figure}[!htbp]\centering \includegraphics[width=\MyFactor\textwidth]{Img/pca_eivalue.pdf} 
 \caption{特征值分布图 \\ 蓝色:舍弃的特征向量, 红色: 保留的特征向量}\end{figure}
 设特征向量组成的基底矩阵为V, 输入图像为I, 则该步骤可以表示为:
 \begin{equation}
@@ -76,7 +76,7 @@ Weights = Inv(V) \cdot I
 %\label{fig:main}
 \center
 {
-\includegraphics[width=\textwidth]{Img/pca_demo.pdf} 
+\includegraphics[width=\MyFactor\textwidth]{Img/pca_demo.pdf} 
 \captionof{figure}{图像投影示意}
 }
 \end{minipage}
@@ -264,7 +264,7 @@ NMF算法提出了保证W,H非负性的前提下的迭代公式,并证明了其�
 %\label{fig:main}
 \center
 {
-\includegraphics[width=\textwidth]{Img/nmf_cost.pdf} \captionof{figure}{NMF的惩罚函数下降曲线 \\ x坐标:迭代次数, y坐标 惩罚函数\ref{nmf_cost}}
+\includegraphics[width=\MyFactor\textwidth]{Img/nmf_cost.pdf} \captionof{figure}{NMF的惩罚函数下降曲线 \\ x坐标:迭代次数, y坐标 惩罚函数\ref{nmf_cost}}
 }
 \end{minipage}
 \medskip
@@ -689,8 +689,7 @@ MSE的公式为\begin{equation}
 \subsection{结合\textit{One-Against-All} SVM的分类实验}
 \paragraph{识别结果} 当全局特征提取后,自然地,对这些样本本项目尝试了使用SVM的分类识别的测试.其实验过程:
 	\begin{enumerate}
-		\item 使用k-fold Cross Validation的方法,K取值为1
-		\item 改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
+		\item 采用\textit{Cross Validation "Hold Off"}的方法,改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
 		\item 每个学习样本又同时对应了不同的基底长度
 		\item 将学习,测试样本予以投影,并取得对应权值
 		\item 具体测试是指对ORL数据库40个人,通过学习样本的标签来推测测试样本的标签
@@ -743,7 +742,7 @@ MSE的公式为\begin{equation}
 	\medskip
 	\end{center}
 	
-	得到的结论是
+	\paragraph{结论}
 	\begin{itemize}
 	\item 特征向量越多，在充分学习的情况下，其表现会越好，但这种优势并不明显，通常，特征向量$15-30$长度就足够满足需求了。
 	\item 更多的特征向量会要求更多的学习样本，当映射使用了很多特征向量时，会增加对样本的需求，并降低其最终的识别率。
@@ -789,7 +788,7 @@ MSE的公式为\begin{equation}
 	\end{center}
 	DCT处理后,显著提升了ICA的性能,使得ICA在特征向量较短的情况下能取得更加好的成功识别率.
 	
-	发现,
+	\paragraph{结论}
 	\begin{itemize}
 		\item 确实可以提高ICA的识别率.所以处理的空间对样本来说也比较重要.
 		\item 识别到一定成功率后,基于全局的方法出现了瓶颈.参考下面列出的易于出错的样本,发现这主要由于有些样本比较相似导致的
@@ -834,7 +833,7 @@ Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果
 	\end{center}
 	可以发现,大部分结果是正确的,同时,也发现了一定的对称性,说明有些样本易于混淆,比如,SVM分类40号样本时误认为部分是5号样本的,当分类5号样本时,由误认了部分样本是40号的.说明全局的特征提取算法无法分析细节,所以只能给出大概的估计.
 
-\subsection{更多的分类机}
+\subsection{结合多种分类模型的分类实验}
 
 上一节详细使用了SVM作为分类机,本节将遍历分类算法,来综合测试.具体过程如下:
 	\begin{enumerate}
