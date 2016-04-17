@@ -84,6 +84,7 @@ Weights = Inv(V) \cdot I
 \end{center}
 
 \subsection{两类不同的特征空间}
+\label{sec:arch2}
 \begin{center}
 \begin{minipage}[t]{\linewidth}
 %\label{fig:main}
@@ -104,7 +105,8 @@ Weights = Inv(V) \cdot I
 
 第二类的思想是将人脸图像样本作为各个像素的描述,并且转而把像素作为变量.
 \\
-在实践中由于第二类的维数过高,运算量太大,采用了第一类.\todo{ArchitectureII}
+在实践中由于第二类的维数过高,运算量太大,采用了第一类.
+
 \section{PCA}
 本章节的主要依据文献是\cite{turk1991eigenfaces, turk1991face},从本章节开始,将依次简要介绍PCA, NMF, ICA的基本原理和计算方法.并在ORL数据库下给出其特征脸空间. \newline
 
@@ -282,7 +284,7 @@ NMF算法提出了保证W,H非负性的前提下的迭代公式,并证明了其�
 \end{minipage}
 \medskip
 \end{center}
-\todo{Projected Gradient Methods for Non-negative Matrix Factorization}
+
 
 由于NMF基底不是正交的,使用了\textit{Matlab}函数中\textit{Pinv()}函数计算了伪逆来投影.
 \section{ICA}
@@ -446,29 +448,28 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 \subsection{分块ICA用于图片压缩}
 需要指出的是,ICA分解结果具有较强的稀疏性,因此也被用来压缩图像.这在\ref{fig:ica_base}中,可以看出大部分特征脸的部分都接近于0(近乎白色或者灰色)
-\todo{分块ICA用于图片压缩}
 
-
-\section{DCT}
-在之前的实践中,笔者发现实际上任何图片的较为短小的并且与图片有较大联系的相关向量都可以被当做特征向量.这里,本项目从频域的角度出发,提取了图片的频域基频特征.
-\section{更多的基底}
-除了这些方法,还有很多其他的方法.\cite{de2010face}列出了更为详尽的列表,限于项目时间的限制,并没有深入研究这些所有的算法,仅仅尽可能的通过\textit{SciKit}工具包来列出相同测试样本下的基底.
-	\begin{itemize}
-		\item Kernel PCA
-		\item Weighted PCA
-		\item Linear Discriminant Analysis (LDA)
-		\item Kernel LDA
-		\item Semi-supervised Discriminant Analysis (SDA)
-		\item Neural Network based methods
-		\item Multidimensional Scaling (MDS)
-		\item Self-organizing map (SOM)
-		\item Active Shape Models (ASM)
-		\item Active Appearance Models (AAM)
-		\item Gavor wavelet transforms
-		\item MMSD, SMSD
-	\end{itemize}
+%\section{DCT}
+%在之前的实践中,笔者发现实际上任何图片的较为短小的并且与图片有较大联系的相关向量都可以被当做特征向量.这里,本项目从频域的角度出发,提取了图片的频域基频特征.
+%\section{更多的基底}
+%除了这些方法,还有很多其他的方法.\cite{de2010face}列出了更为详尽的列表,限于项目时间的限制,并没有深入研究这些所有的算法,仅仅尽可能的通过\textit{SciKit}工具包来列出相同测试样本下的基底.
+%	\begin{itemize}
+%		\item Kernel PCA
+%		\item Weighted PCA
+%		\item Linear Discriminant Analysis (LDA)
+%		\item Kernel LDA
+%		\item Semi-supervised Discriminant Analysis (SDA)
+%		\item Neural Network based methods
+%		\item Multidimensional Scaling (MDS)
+%		\item Self-organizing map (SOM)
+%		\item Active Shape Models (ASM)
+%		\item Active Appearance Models (AAM)
+%		\item Gavor wavelet transforms
+%		\item MMSD, SMSD
+%	\end{itemize}
 
 \section{相关实验}
+\subsection{相关参数}
 本部分对上述方法进行测试,这里列举了下列所有测试方法中使用的参数:
 	\paragraph{NMF参数}
 	\begin{itemize}
@@ -569,8 +570,6 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 \medskip
 \end{center}
 
-
-\todo{observation}
 \paragraph{结论}
 \begin{itemize}
 	\item 可见,上述6幅图片的对角线均存在着颜色约为黑色(取值为0),大小约为$10 \times 10$的方阵,说明这些算法都有能力将不同人,同一个人的照片区别开来.但是,这些图也有一些瑕疵,如,有些类间的距离比较小,有些说明类内距离比较大.
@@ -621,8 +620,7 @@ ICA的推导中对变量有一定的要求,需要进行一些预处理,这些操
 
 \subsection{重建与恢复}
 \label{sec:pni_recon}
-本小节是对PCA, NMF, ICA的恢复情况的比较.其过程是这样的,在\ref{sec:pni_cal_time}的基础上,分别选取5个样本来投影,并计算PSNR和MSE. 
-
+本小节是对PCA, NMF, ICA的恢复情况的比较.其过程是这样的,在\ref{sec:pni_cal_time}的基础上,分别选取5个样本来投影,并计算PSNR和MSE. 维度分别为[1, 11, 21, 31, 41, 51, 61, 71, 81, 91].
 \begin{enumerate}
 	\item 第一张样本是ORL数据库中已有的一张图片,该图片参与了基底运算
 	\item 第二张样本是ORL数据库中已有的一张图片,该图片没有参与基底运算
@@ -683,13 +681,11 @@ MSE的公式为\begin{equation}
 	\item 这种压缩方法其实并不合适,更好的方法应该是采用分块的方式,由于压缩比率过大,才使得恢复效果这么差的
 \end{enumerate}
 
-\todo{\ref{sec:pni_recon}的应用,实际上\ref{sec:pni_recon}中MSE的区别是可以被加以利用来识别场景的.以下是对应的ROC曲线的绘制:
-}
 
 \subsection{结合\textit{One-Against-All} SVM的分类实验}
 \paragraph{识别结果} 当全局特征提取后,自然地,对这些样本本项目尝试了使用SVM的分类识别的测试.其实验过程:
 	\begin{enumerate}
-		\item 采用\textit{Cross Validation "Hold Off"}的方法,改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
+		\item 采用\textit{Cross Validation Hold Off}的方法,改变学习样本范围从10\%到90\%.选择样本时,每个人的样本均被随机同比例地分割
 		\item 每个学习样本又同时对应了不同的基底长度
 		\item 将学习,测试样本予以投影,并取得对应权值
 		\item 具体测试是指对ORL数据库40个人,通过学习样本的标签来推测测试样本的标签

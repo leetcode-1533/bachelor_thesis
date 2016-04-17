@@ -1,5 +1,7 @@
 \chapter{基于局部的特征提取算法}
 在上一节的学习过程中,笔者渐渐感觉到计算算子对人脸识别,分类系统的影响非常大,毕竟,人脸图像被分解后,仅仅由一个很短的向量来表示,那该编码系统对样本的区分程度很大程度上就能决定后续分类系统的性能.因此,我渐渐发现了基于局部的特征提取算法,它们有些具有\textit{Content Awareness}的特性,对背景噪声有一定的区分能力,并且可以精细的比较样本的细节之处,因此可以达到精确的识别性能.本章节以SIFT算子为例做介绍.
+
+\section{SIFT}
 \subsection{SIFT的原理}
 本章节主要基于\cite{lowe2004distinctive, issolah2013sift, juan2009comparison, siftopencv, siftvlfeat, siftubc,lowe1999object},在Matlab中使用了\cite{siftvlfeat}实现的SIFT算法. \newline
 
@@ -26,7 +28,7 @@ SIFT算子的计算方法共分4步.
 		%\label{fig:main}
 		\center
 		{
-		\includegraphics[width=\MyFactor\textwidth]{Img/c3/sift_detectors.pdf} \captionof{figure}{SIFT特征点示意}
+		\includegraphics[width=\textwidth]{Img/c3/sift_detectors.pdf} \captionof{figure}{SIFT特征点示意}
 		}
 		\end{minipage}
 		\medskip
@@ -195,23 +197,109 @@ SIFT算子的计算方法共分4步.
 
 
 无论如何,KBNN算法只是基于距离的计算,可以被并行加速,同时有很高的识别度.
-\subsection{相关实验}
-\subsubsection{基底投影的区别}
+\section{相关实验}
 
-\subsection{结合分类机的分类实验}
-\begin{center}
-	\captionof{table}{与SIFT有关的不同分类方法}
-	\begin{tabular}{|l|l|l|}
-	\hline
-		 &SIFT & SIFT PCA \\ \hline
-		SVM & &\\ \hline
-		NKNN & &\\ \hline
-		 
-	\end{tabular}
+\subsection{相关参数}
+下面章节有关的参数默认值:
 
-\end{center}
+\paragraph{SIFT-PCA的基底}
+\begin{itemize}
+	\item 基底: 120(40个人,每人3张)图片特征空间的全集
+	\item 特征向量数: 前20个特征向量,约占50\%的特征值
+	\item 使用\textit{kmeans}聚类
+\end{itemize}
+
+\paragraph{SIFT和SIFT-PCA的编码方法}
+\begin{itemize}
+	\item 基底: 120(40个人,每人3张)特征点位置的全集
+	\item 在固定点描述的方法
+	\item 使用\textit{kmeans}聚类
+\end{itemize}
+
+\paragraph{SVM参数}
+	\begin{itemize}
+		\item 核函数: 径向基函数 $exp(-gamma*|u-v|^2)$
+		\item 径向基函数维度:3
+		\item 惩罚函数参数: 0.5
+		\item 容错值: 0.001
+	\end{itemize}
 
 
 
-\input{Tex/commithistory.tex}
+\subsection{基底投影的区别}
+
+\subsection{结合SVM, NKNN的分类实验}
+本章采用\textit{Cross Validation Hold Off}的测试方法,测试范围从样本的10\%用来学习到90\%用来学习.来探究不同分类机(SVM, NKNN),SIFT使用不同描述(HoG, SIFT-PCA)时的分类效果.\newline
+
+\paragraph{不同分类机,SIFT使用不同描述时的分类效果}
+本节参数,\begin{itemize}
+	\item SIFT: 提取3个特征点,并在这些特征点上提取测试图像的特征
+	\item 结合NKNN的SIFT-PCA: 提取特征空间,每个特征空间由被提取了20个特征向量
+	\item 结合SVM编码的SIFT-PCA: 提取3个特征点,并在这些特征点上提取特征空间,每个特征空间由被提取了20个特征向量
+\end{itemize}
+
+
+下图是分类效果,
+
+
+		\begin{center}
+		\begin{minipage}[t]{\linewidth}
+		%\label{fig:main}
+		\center
+		{
+		\includegraphics[width=\textwidth]{Img/c3/sift_classification} 
+		\captionof{figure}{SIFT-SVM, SIFT-PCA-SVM, SIFT-NKNN, SIFT-PCA-NKNN的比较}
+		}
+		\end{minipage}
+		\medskip
+		\end{center}
+		
+\paragraph{结论:}
+\begin{enumerate}
+	\item 如之前的算法一样,这些算法都是随着样本数的增加而更加精确.
+	\item 基于局部的算法有着优良的准确度,如,在学习了50\%的样本后,NKNN算法就能达到近乎95\%的识别率.
+	\item NKNN算法的识别率明显优于SVM分类机.这主要是由于NKNN算法无需编码,从而减小了信息损失的缘故.
+	\item 实践中,明显感觉基于局部算法的运行效率比基于全局的慢一些,这是由于局部算法的向量长度比较长的缘故.
+\end{enumerate}
+
+虽然在当前的比较看上去SVM算法比较差,但是这也和编码算法有关,下面部分将就编码算法,样本数和识别率三者之间的关系做进一步讨论.
+
+\paragraph{SIFT, SIFT-PCA的比较}本节参数,
+\begin{itemize}
+	\item 采用在固定点的编码方法
+	\item SIFT-PCA特征向量长度为20
+	\item SVM识别方法
+\end{itemize}
+
+		\begin{center}
+		\begin{minipage}[t]{\linewidth}
+		%\label{fig:main}
+		\center
+		{
+		\includegraphics[width=\textwidth]{Img/c3/sift_sift_pca_svm} 
+		\captionof{figure}{结合SVM时,SIFT, SIFT-PCA的比较}
+		}
+		\end{minipage}
+		\medskip
+		\end{center}
+	
+\paragraph{结论}
+\begin{enumerate}
+	\item 可见SIFT-PCA的分类效果不如SIFT
+	\item 综合来说,SIFT-PCA向量长度为SIFT的$1/5$,而牺牲了10\%左右的识别率
+\end{enumerate}
+
+\paragraph{SIFT-PCA特征向量变化的影响}
+本节参数,
+\begin{itemize}
+	\item 采用在固定点的编码方法
+	\item SIFT-PCA特征向量长度为20
+	\item SVM识别方法
+\end{itemize}
+
+
+
+\subsection{结合多种分类模型的分类实验}
+
+
 
