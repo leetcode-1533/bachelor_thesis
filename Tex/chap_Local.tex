@@ -204,9 +204,8 @@ SIFT算子的计算方法共分4步.
 
 \paragraph{SIFT-PCA的基底}
 \begin{itemize}
-	\item 基底: 120(40个人,每人3张)图片特征空间的全集
+	\item 基底: 120(40个人,每人3张)图片特征空间经过\textit{kmeans}聚类后提取得到的每张图片20个特征空间的全集
 	\item 特征向量数: 前20个特征向量,约占50\%的特征值
-	\item 使用\textit{kmeans}聚类
 \end{itemize}
 
 \paragraph{SIFT和SIFT-PCA的编码方法}
@@ -227,6 +226,19 @@ SIFT算子的计算方法共分4步.
 
 
 \subsection{基底投影的区别}
+
+			\begin{center}
+		\begin{minipage}[t]{\linewidth}
+		%\label{fig:main}
+		\center
+		{
+		\includegraphics[width=1.1\textwidth]{Img/c3/sift_dis_mat} 
+		\captionof{figure}{SIFT及SIFT-PCA的距离矩阵}
+		}
+		\end{minipage}
+		\medskip
+		\end{center}
+		
 
 \subsection{结合SVM, NKNN的分类实验}
 本章采用\textit{Cross Validation Hold Off}的测试方法,测试范围从样本的10\%用来学习到90\%用来学习.来探究不同分类机(SVM, NKNN),SIFT使用不同描述(HoG, SIFT-PCA)时的分类效果.\newline
@@ -293,11 +305,28 @@ SIFT算子的计算方法共分4步.
 本节参数,
 \begin{itemize}
 	\item 采用在固定点的编码方法
-	\item SIFT-PCA特征向量长度为20
 	\item SVM识别方法
+	\item 样本数70\%
 \end{itemize}
 
+		\begin{center}
+		\begin{minipage}[t]{\linewidth}
+		%\label{fig:main}
+		\center
+		{
+		\includegraphics[width=\textwidth]{Img/c3/sift_pca_iter} 
+		\captionof{figure}{结合SVM时,SIFT, SIFT-PCA的比较}
+		}
+		\end{minipage}
+		\medskip
+		\end{center}
 
+\paragraph{结论}
+
+\begin{enumerate}
+	\item 可以发现, SIFT-PCA的特征向量长度对识别率的影响并不很大, 所以,在使用SIFT-PCA时,可以使用较高的压缩比
+	\item 同时,也发现特征点的数目对识别结果影响较大
+\end{enumerate}
 
 \subsection{结合多种分类模型的分类实验}
 
