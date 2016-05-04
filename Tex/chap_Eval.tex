@@ -30,74 +30,85 @@
 
 以下本小节将ORL的400张照片分别投影到以120张照片为基底所解析出的64个基底,并且计算这400个坐标两两之间的距离.分别计算了欧式距离和余弦距离.
 
-
 \begin{center}
 \begin{minipage}[t]{\linewidth}
 %\label{fig:main}
 \center
 {
-\includegraphics[width=\MyFactor\textwidth]{Img/pcaeu} \captionof{figure}{PCA Euclidean Distance}
+\includegraphics[width=1.1\textwidth]{Img/pni_dist} \captionof{figure}{PCA, NMF, ICA 投影权值的欧式距离和余弦距离}
 }
 \end{minipage}
 \medskip
 \end{center}
 
-\begin{center}
-\begin{minipage}[t]{\linewidth}
-%\label{fig:main}
-\center
-{
-\includegraphics[width=\MyFactor\textwidth]{Img/nmfeu} \captionof{figure}{NMF Euclidean Distance}
-}
-\end{minipage}
-\medskip
-\end{center}
-
-\begin{center}
-\begin{minipage}[t]{\linewidth}
-%\label{fig:main}
-\center
-{
-\includegraphics[width=\MyFactor\textwidth]{Img/icaeu} \captionof{figure}{ICA Euclidean Distance}
-}
-\end{minipage}
-\medskip
-\end{center}
-
-
-\begin{center}
-\begin{minipage}[t]{\linewidth}
-%\label{fig:main}
-\center
-{
-\includegraphics[width=\MyFactor\textwidth]{Img/pcacos} \captionof{figure}{PCA Cosine Distance}
-}
-\end{minipage}
-\medskip
-\end{center}
-
-\begin{center}
-\begin{minipage}[t]{\linewidth}
-%\label{fig:main}
-\center
-{
-\includegraphics[width=\MyFactor\textwidth]{Img/nmfcos} \captionof{figure}{NMF Cosine Distance}
-}
-\end{minipage}
-\medskip
-\end{center}
-
-\begin{center}
-\begin{minipage}[t]{\linewidth}
-%\label{fig:main}
-\center
-{
-\includegraphics[width=\MyFactor\textwidth]{Img/icacos} \captionof{figure}{ICA Cosine Distance}
-}
-\end{minipage}
-\medskip
-\end{center}
-
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/pcaeu} \captionof{figure}{PCA Euclidean Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/nmfeu} \captionof{figure}{NMF Euclidean Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/icaeu} \captionof{figure}{ICA Euclidean Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/pcacos} \captionof{figure}{PCA Cosine Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/nmfcos} \captionof{figure}{NMF Cosine Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
+%\begin{center}
+%\begin{minipage}[t]{\linewidth}
+%%\label{fig:main}
+%\center
+%{
+%\includegraphics[width=\MyFactor\textwidth]{Img/icacos} \captionof{figure}{ICA Cosine Distance}
+%}
+%\end{minipage}
+%\medskip
+%\end{center}
+%
 \paragraph{结论}
 \begin{itemize}
 	\item 可见,上述6幅图片的对角线均存在着颜色约为黑色(取值为0),大小约为$10 \times 10$的方阵,说明这些算法都有能力将不同人,同一个人的照片区别开来.但是,这些图也有一些瑕疵,如,有些类间的距离比较小,有些说明类内距离比较大.
@@ -377,7 +388,7 @@ Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果
 	%\label{fig:main}
 	\center
 	{
-	\includegraphics[width=\MyFactor\textwidth]{Img/class_training} \captionof{figure}{使用\textit{Matlab Classification Learner}进行分类机遍历}
+	\includegraphics[width=\textwidth]{Img/class_training} \captionof{figure}{使用\textit{Matlab Classification Learner}进行分类机遍历}
 	}
 	\end{minipage}
 	\medskip
@@ -479,8 +490,12 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 	\end{minipage}
 	\medskip
 	\end{center}
-
-
+\paragraph{结论}
+\begin{itemize}
+	\item 分类器是没有预知信息的,从随机权值的表现平均仅2.2\%可以看出.
+	\item RCA的表现大部分情况并不好,说明了基底的选择与优化是有意义的.
+	\item 可以发现,直接对图片采取下采样得到的结果较为优秀,某些情况下还由于特征提取算法.这可能是由于本次输入图片没有背景干扰的原因导致的.一些简单的场景也可以结合一个优化的分类机与下采样算法实现识别.
+\end{itemize}
 \section{基于局部特征提取算法的相关实验}
 \label{sec:comp_local}
 
@@ -492,10 +507,12 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 	\item 基底: 120(40个人,每人3张)图片特征空间经过\textit{kmeans}聚类后提取得到的每张图片20个特征空间的全集
 	\item 特征向量数: 前20个特征向量,约占50\%的特征值
 	\end{enumerate}
+	
 	\item SIFT和SIFT-PCA的编码方法 \begin{enumerate}
 \item 基底: 120(40个人,每人3张)特征点位置的全集
 	\item 在固定点描述的方法
 	\item 使用\textit{kmeans}聚类	\end{enumerate}
+	
 	\item SVM参数 \begin{enumerate}
 	\item 核函数: 径向基函数 $exp(-gamma*|u-v|^2)$
 		\item 径向基函数维度:3
@@ -520,7 +537,7 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 		\end{minipage}
 		\medskip
 		\end{center}
-		
+	
 
 \subsection{结合SVM, NKNN的分类实验}
 本章采用\textit{Cross Validation Hold Off}的测试方法,测试范围从样本的10\%用来学习到90\%用来学习.来探究不同分类机(SVM, NKNN),SIFT使用不同描述(HoG, SIFT-PCA)时的分类效果.\newline
@@ -638,10 +655,27 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 \paragraph{结论}
 \begin{itemize}
 	\item 和之前大多数情况一样,该配置下大部分情况下SIFT表现优于SIFT-PCA.但是差别并不很大,并且SIFT-PCA长度大大短于SIFT.
-	\item 在编码方式后,由于信息丢失,SIFT结合普通分类机的表现并没有优势.
+	\item 在编码方式后,由于信息丢失,SIFT结合普通分类机的表现并没有优势.说明好的特征提取算法也需要与对应的分类机结合.
 \end{itemize}
-\todo{不同尺度下的性能
-下面将就各种特征提取算法在不同尺度下的性能做出比较. 具体的设置与之前的设置一样,然后构建高斯金字塔,探究不同的特征提取算法在不同尺度下的图像提取性能. }
+
+\section{综合比较:不同尺度下的性能}
+
+下面将就各种特征提取算法在不同尺度下的性能做出比较. \newline
+
+由于本毕业设计中涉及了较多的算法,所以全部加入比较会使结果非常冗长.通过对之前两小节的比较,笔者选择出了一些有代表性的算法,在此结合图片维度的变化来一并做出比较.这些算法及其参数:
+\begin{enumerate}
+	\item PCA结合SVM分类机
+	\item ICA结合SVM分类机
+	\item SIFT结合编码算法后结合SVM分类机
+	\item SIFT\_PCA结合NKNN算法
+\end{enumerate}
+参数和之前一样,分别是:
+\begin{
+	\item SIFT-PCA的基底 \begin{enumerate}
+	\item 基底: 120(40个人,每人3张)图片特征空间经过\textit{kmeans}聚类后提取得到的每张图片20个特征空间的全集
+	\item 特征向量数: 前20个特征向量,约占50\%的特征值
+	\end{enumerate}
+	\item SIFT和SIFT-PCA的编码方法 \begin{enumerate}
 
 %\section{F-Score}
 %以上章节仅就\textit{识别率}这一指标来评价,实际上,这是不全面的,因为没有考虑\textit{False Positive}和\textit{True Negative}的矛盾问题,具体来说,
@@ -676,3 +710,6 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 
 \paragraph{KD树进行人脸搜索}
 实际上,本项目还实现了基于距离的人脸搜索过程,但是,很遗憾的,仅仅基于距离很难搜索到相近的人.因此该部分并没有产生较好的结果,作者希望可以加以模糊逻辑等方法来优化这个过程.同时,作者指出这个方法的优越性,距离搜索可以通过KD树来完成,性能非常好,可以分布计算,非常构建人脸数据库,在大量人群中快速搜索.
+
+\paragraph{算法比较的其他指标}
+以上章节仅就\textit{识别率}这一指标来评价,实际上,这是不全面的,因为没有考虑\textit{False Positive}和\textit{True Negative}的矛盾问题.笔者拟结合\textit{F-Scrore}这个参数来和\textit{识别率}一起表征算法的性能.
