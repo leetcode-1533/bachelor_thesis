@@ -448,6 +448,7 @@ Confusion Matrix是表征分类情况的图像,以下是某次SVM运行的结果
 \end{itemize}
 
 \paragraph{分类机对照组} 另外,为了就特征提取这一问题的必要性做出分析,本章节还加入三个参照方法\begin{enumerate} 
+\label{par:bicubic}
 	\item 使用\textit{Bicubic}方法压缩的$4 \times 5$图片作为参考. \textit{Bicubic}压缩时使用的公式为
 $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 
@@ -667,15 +668,61 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 	\item PCA结合SVM分类机
 	\item ICA结合SVM分类机
 	\item SIFT结合编码算法后结合SVM分类机
-	\item SIFT\_PCA结合NKNN算法
+	\item SIFT PCA结合NKNN算法
 \end{enumerate}
 参数和之前一样,分别是:
-\begin{
+\begin{itemize}
+		\item ICA参数 \begin{enumerate}
+		\item \textit{Fastica}算法
+		\item $g = u^3$
+		\item 步长: 1
+		\item 终止条件: 0.0001
+		\item 最大迭代次数: 1000
+		\item 初始条件: Random	\end{enumerate}
+		
+	\item SVM参数 \begin{enumerate}
+	\item 核函数: 径向基函数 $exp(-gamma*|u-v|^2)$
+		\item 径向基函数维度:3
+		\item 惩罚函数参数: 0.5
+		\item 容错值: 0.001	\end{enumerate}
+		
+			\item SIFT编码方法 \begin{enumerate}
+\item 基底: 120(40个人,每人3张)特征点位置的全集
+	\item 在固定点描述的方法
+	\item 使用\textit{kmeans}聚类	\end{enumerate}
+	
 	\item SIFT-PCA的基底 \begin{enumerate}
 	\item 基底: 120(40个人,每人3张)图片特征空间经过\textit{kmeans}聚类后提取得到的每张图片20个特征空间的全集
 	\item 特征向量数: 前20个特征向量,约占50\%的特征值
 	\end{enumerate}
-	\item SIFT和SIFT-PCA的编码方法 \begin{enumerate}
+	
+\end{itemize}
+同时,由于下采样算法之间也有区别,笔者同时测试了两类算法:
+\begin{itemize}
+	\item \textit{Bicubic Interpolation:} 这与\ref{par:bicubic}中的方法一样
+	\item \textit{Seam Carver:} 这是一种Content-Awareness的方法,它的基本原理是寻找图片中能量最低的路径并剔除.
+		\begin{center}
+	\begin{minipage}[t]{\linewidth}
+	\center
+	{
+	\captionsetup{justification=centering}
+	\includegraphics[width=0.3\textwidth]{Img/c4/seam_demo} \captionof{figure}{Seam Carver剔除示意}
+	}
+	\end{minipage}
+	\medskip
+	\end{center}
+\end{itemize}
+下面是两种方法的比较:
+\begin{center}
+\begin{minipage}[t]{\linewidth}
+\center
+{
+\captionsetup{justification=centering}
+\includegraphics[width=\MyFactor\textwidth]{Img/c4/img_resize} \captionof{figure}{Image Interpolation 和 Seam Carver比较 \\ Seam Carver产生畸变的原因是它试图保留图片中变化剧烈的部分,如耳朵,嘴唇等.}
+}
+\end{minipage}
+\medskip
+\end{center}
 
 %\section{F-Score}
 %以上章节仅就\textit{识别率}这一指标来评价,实际上,这是不全面的,因为没有考虑\textit{False Positive}和\textit{True Negative}的矛盾问题,具体来说,
@@ -687,29 +734,53 @@ $$ p(x,y) = \Sigma_{i=0}^3\Sigma_{j=0}^3 a_{ij} x_i y_j $$
 %
 
 \section{结论与展望}
+\paragraph{结论}
+近半年的毕业设计终于告一段落了,笔者在其中学到了不少知识,如降维算法,模型评价等知识.下面是个人在各种模型比较中的到的经验.\\
 
-近半年的毕业设计终于告一段落了,笔者在其中学到了不少知识,如降维算法,模型评价等知识.但是,受限于个人能力和时间投入的原因,有很多地方只得匆忙完成,不能再深入讨论下去了,本部分将可以深入探究的地方罗列一下,期望日后能得以机会加以完善.
 
-\paragraph{全局识别的第二种架构}
+首先,在开始尝试时,应有明确的目标.在对精度要求不高时,有些算法能有优异的表现(如直接下采样,全局的特征提取),但是它的表现往往存在上限.当需要高精度运算时,往往需要更为耗时的算法(如NKNN算法).
+
+
+再者,还要结合系统的目的,是构建一个宽松的推荐系统或者是一个要求严格的人脸加密系统?因为不同的算法F-Score不同,他们的容错率也不一样.
+
+
+其次,人脸识别系统是由多个部分组成的,各个组件之间应该是有机的结合.如,在ICA结合了Fine Gaussian SVM后,它的表现较为突出.因此,分类机和特征提取的算法的研究不能被分离.
+
+
+同时,也可以看到,人脸识别过程对样本的要求并非越多越好,过多的样本对精度的提升很小.也可以看到,特征提取算法维数选择恰当的情况下,适中的样本就可以达到优化的识别率.
+
+
+总而言之,人脸识别中的特征提取是非常必要的,可以看到,在未特征提取时,大多数分类机由于维数过大而计算较慢,在提取特征后,计算不仅变得更为可行,也由于特征提取中剔除噪声的过程而提高了计算精度.
+
+
+
+\paragraph{展望}
+受限于个人能力和时间投入的原因,有很多地方只得匆忙完成,不能再深入讨论下去了,本部分将可以深入探究的地方罗列一下,期望日后能得以机会加以完善.
+
+\begin{enumerate}
+
+\item \textbf{全局识别的第二种架构: }
 本文所有的全局识别算法都是建立在以人脸图像为基本单元的基础上,由于人脸图像样本数目远小于像素的数目,这样做比较快.但是,也不可否认,存在第二种方法.在\ref{sec:arch2}中列出了以像素为基本单元的方法.目前由于运算时间的问题没能继续下去.
 
-\paragraph{NMF算法的迭代方法研究}
+\item \textbf{NMF算法的迭代方法研究: }
 本文所用的NMF迭代算法是比较早的算法,根据\cite{lin2007projected}. 本文所用的NMF算法是存在一定问题的,作者希望就NMF这一算法深入研究.
 
-\paragraph{ICA算法应用于图片压缩}
+\item \textbf{ICA算法应用于图片压缩: }
 作者在研究论文时,发现了将图片切割并使用分块的PCA或ICA来实现图像压缩的算法.以图\ref{fig:ica_base}为例,ICA算法有很强的稀疏性,因此适合以保留主要参数的方法进行图片压缩.ICA图像压缩由于不是在频谱上压缩,因此有保留图像细节的优点.
 
-\paragraph{章节\ref{sec:pni_recon}的应用}
+\item \textbf{章节\ref{sec:pni_recon}的应用: }
 实际上\ref{sec:pni_recon}中MSE的差别可以被加以利用来识别场景的.可以看到,人脸压缩并恢复后的图像的与原始图像的差别小于非人脸压缩并恢复后的图像,这可以从这个角度识别人脸.
 
-\paragraph{SIFT算法的编码方法}
+\item \textbf{SIFT算法的编码方法: }
 本文实现的SIFT编码方法比较粗略,实际上还存在更多更加优秀的算法,受限于时间作者没能一一实现.
 
-\paragraph{Gabor算子}
+\item \textbf{Gabor算子: }
 本文的局部特征提取算法只实现了SIFT算法,实际还有\textit{Gabor}等算法,作者希望有机会时把这部分内容也加进去.
 
-\paragraph{KD树进行人脸搜索}
+\item \textbf{KD树进行人脸搜索: }
 实际上,本项目还实现了基于距离的人脸搜索过程,但是,很遗憾的,仅仅基于距离很难搜索到相近的人.因此该部分并没有产生较好的结果,作者希望可以加以模糊逻辑等方法来优化这个过程.同时,作者指出这个方法的优越性,距离搜索可以通过KD树来完成,性能非常好,可以分布计算,非常构建人脸数据库,在大量人群中快速搜索.
 
-\paragraph{算法比较的其他指标}
+\item \textbf{算法比较的其他指标: }
 以上章节仅就\textit{识别率}这一指标来评价,实际上,这是不全面的,因为没有考虑\textit{False Positive}和\textit{True Negative}的矛盾问题.笔者拟结合\textit{F-Scrore}这个参数来和\textit{识别率}一起表征算法的性能.
+
+\end{enumerate}
