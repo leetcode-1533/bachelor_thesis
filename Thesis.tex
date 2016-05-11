@@ -28,6 +28,10 @@
 \usepackage{fullpage}
 \usepackage{multicol}
 \usepackage{longtable}
+\usepackage{pdfpages}
+
+
+
 
 \begin{document}
 
@@ -36,20 +40,31 @@
 \input{./Tex/Frontpages} %title etc..
 \tableofcontents
 
+
+
 \mainmatter
 \input{./Tex/Main_Content}
 
 
-\appendix
+
+%
 %\input{Tex/Prematter} % roman character...
-\input{Tex/Appendix}
 
-\backmatter
 
+
+
+\intotoc{参考文献}
 \bibliography{Biblio/Myrefs}
 \bibliographystyle{unsrt}
-\intotoc{参考文献}
 
-%\input{./Tex/Backmatter} % credits..
+\appendix
+\input{Tex/Appendix}
+
+
+\backmatter
+\input{./Tex/Backmatter}
+\includepdf{add2}
+
+% % credits..
 \end{document}
 
